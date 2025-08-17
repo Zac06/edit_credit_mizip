@@ -52,6 +52,9 @@ class credit_mizip {
 
         string block_0, block_1, block_2;
 
+        /// @brief Converts a string of hex characters into a vector of bytes.
+        /// @param hex The HEX string to convert
+        /// @return The newly created vector
         vector<uint8_t> hex_to_bytes(const string& hex) {
             if (hex.size()%2!=0)
                 throw runtime_error("Invalid hex string length");
@@ -68,7 +71,9 @@ class credit_mizip {
             return bytes;
         }
 
-
+        /// @brief Prints the contents of the data buffer to stdout, in HEX format
+        /// @param data Buffer containing the bytes to be printed
+        /// @param len Number of bytes to print
         void print_hex(const uint8_t* data, size_t len) {
             for (int i=0;i<len;i++) {
                 cout<<hex<<uppercase<<setw(2)<<setfill('0')<<(int)data[i];
@@ -77,6 +82,10 @@ class credit_mizip {
         }
 
     public:
+        /// @brief Class constructor
+        /// @param p_block_0 Hex bytes [0-15] of the MiZip key sector no. 2
+        /// @param p_block_1 Hex bytes [16-31] of the MiZip key sector no. 2
+        /// @param p_block_2 Hex bytes [32-47] of the MiZip key sector no. 2
         credit_mizip(const string& p_block_0, const string& p_block_1, const string& p_block_2)
             :block_0(p_block_0),block_1(p_block_1),block_2(p_block_2) 
         {
@@ -89,6 +98,7 @@ class credit_mizip {
             memcpy(&price_sec.block_2, hex_to_bytes(block_2).data(), sizeof(price_sec.block_2));
         }
 
+        /// @brief Prints information (credit, last transactions, next transaction, transaction number, ecc.)
         void print_info(){
             cout<<"\n";
             cout<<"Credit\tOperation\tNext to edit\n";
@@ -98,12 +108,16 @@ class credit_mizip {
             cout<<"New op.\t"<<(int)price_sec.block_2.curr_operation_no+1<<"\n\n";
         }
 
+        /// @brief Prints the contents of the whole sector, in HEX, divided into three blocks of 16 bytes each
         void print_hex_contents(){
             print_hex((uint8_t*)&price_sec.block_0, 16);
             print_hex((uint8_t*)&price_sec.block_1, 16);
             print_hex((uint8_t*)&price_sec.block_2, 16);
         }
 
+        /// @brief Updates the credit with the value provided, together with all the related fields in the sector. Should be between 0 and 655.35 to work properly.
+        /// @param new_credit The new credit value to insert into the MiZip sector no. 2.
+        /// @warning This method does not check for overflow.
         void update(float new_credit){
             price tmp;
             tmp.whole=(uint16_t)(new_credit*100);
