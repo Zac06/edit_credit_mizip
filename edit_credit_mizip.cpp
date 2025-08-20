@@ -10,9 +10,6 @@ using namespace std;
 #include "credit_mizip.hpp"
 
 
-
-
-
 int main(){
     string block_0, block_1, block_2;
 
