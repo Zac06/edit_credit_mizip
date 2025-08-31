@@ -82,6 +82,12 @@ class credit_mizip {
         }
 
     public:
+        credit_mizip()
+            :block_0(), block_1(), block_2()
+        {
+        }
+
+
         /// @brief Class constructor
         /// @param p_block_0 Hex bytes [0-15] of the MiZip key sector no. 2
         /// @param p_block_1 Hex bytes [16-31] of the MiZip key sector no. 2
